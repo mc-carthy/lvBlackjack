@@ -4,6 +4,14 @@ function takeCard(hand)
     table.insert(hand, table.remove(deck, love.math.random(#deck)))
 end
 
+function getTotal(hand)
+    local total = 0
+    for k, card in pairs(hand) do
+        total = total + card.rank
+    end
+    return total
+end
+
 function love.load()
     deck = {}
     for suitIndex, suit in ipairs({ 'club', 'diamond', 'heart', 'spade' }) do
@@ -40,6 +48,7 @@ function love.draw()
     for cardIndex, card in ipairs(playerHand) do
         table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
     end
+    table.insert(output, getTotal(playerHand))
     
     table.insert(output, '')
     
@@ -47,6 +56,7 @@ function love.draw()
     for cardIndex, card in ipairs(dealerHand) do
         table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
     end
+    table.insert(output, getTotal(dealerHand))
     
     love.graphics.print(table.concat(output, '\n'), 15, 15)
 end
