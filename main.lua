@@ -100,8 +100,17 @@ function love.keypressed(key)
     if not roundOver then
         if key == 'h' and not roundOver then
             takeCard(playerHand)
+            if getTotal(playerHand) >= 21 then
+                roundOver = true
+            end
         elseif key == 's' then
             roundOver = true
+        end
+
+        if roundOver then
+            while getTotal(dealerHand) < 17 do
+                takeCard(dealerHand)
+            end
         end
     else
         love.load()
