@@ -27,6 +27,10 @@ function getTotal(hand)
     return total
 end
 
+function hasHandWon(thisHand, otherHand)
+    return getTotal(thisHand) <= 21 and (getTotal(otherHand) > 21 or getTotal(thisHand) > getTotal(otherHand))
+end
+
 function love.load()
     deck = {}
     for suitIndex, suit in ipairs({ 'club', 'diamond', 'heart', 'spade' }) do
@@ -76,9 +80,9 @@ function love.draw()
     if roundOver then
         table.insert(output, '')
 
-        if getTotal(playerHand) > getTotal(dealerHand) then
+        if hasHandWon(playerHand, dealerHand) then
             table.insert(output, 'Player wins')
-        elseif getTotal(dealerHand) > getTotal(playerHand) then
+        elseif hasHandWon(dealerHand, playerHand) then
             table.insert(output, 'Dealer wins')
         else
             table.insert(output, 'Draw')
