@@ -74,9 +74,17 @@ function love.draw()
     
     table.insert(output, 'Dealer hand:')
     for cardIndex, card in ipairs(dealerHand) do
-        table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
+        if not roundOver and cardIndex == 1 then
+            table.insert(output, '(Card hidden)')
+        else
+            table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
+        end
     end
-    table.insert(output, getTotal(dealerHand))
+    if roundOver then
+        table.insert(output, getTotal(dealerHand))
+    else
+        table.insert(output, '?')
+    end
 
     if roundOver then
         table.insert(output, '')
