@@ -32,12 +32,29 @@ function hasHandWon(thisHand, otherHand)
 end
 
 function drawCard(card, x, y)
+    local cardWidth, cardHeight = 53, 73
+    local numberOffsetX, numberOffsetY = 3, 4
+    local suitOffsetX, suitOffsetY = 3, 14
+    local suitImage = images['mini_' .. card.suit]
+
+    local function drawCorner(image, offsetX, offsetY)
+        love.graphics.draw(image, x + offsetX, y + offsetY)
+        love.graphics.draw(image, x + cardWidth - offsetX, y + cardHeight - offsetY, 0, -1, -1)
+    end
+
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(images.card, x, y)
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.draw(images[card.rank], x + 3, y + 4)
-    love.graphics.print(card.suit, x, y + 15)
+    
+    if card.suit == 'heart' or card.suit == 'diamond' then
+        love.graphics.setColor(0.89, 0.06, 0.39)
+    else
+        love.graphics.setColor(0.2, 0.2, 0.2)
+    end
+
+    drawCorner(images[card.rank], numberOffsetX, numberOffsetY)
+    drawCorner(suitImage, suitOffsetX, suitOffsetY)
 end
+
 
 function love.load()
     roundOver = false
