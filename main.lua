@@ -6,9 +6,15 @@ end
 
 function getTotal(hand)
     local total = 0
+    
     for k, card in pairs(hand) do
-        total = total + card.rank
+        if card.rank > 10 then
+            total = total + 10
+        else
+            total = total + card.rank
+        end
     end
+    
     return total
 end
 
