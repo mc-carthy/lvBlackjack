@@ -44,12 +44,26 @@ function drawCard(card, x, y)
 
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(images.card, x, y)
-    
+
+    if card.rank > 10 then
+        local faceImage
+        if card.rank == 11 then
+            faceImage = images.face_jack
+        elseif card.rank == 12 then
+            faceImage = images.face_queen
+        elseif card.rank == 13 then
+            faceImage = images.face_king
+        end
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(faceImage, x + 12, y + 11)
+    end
+
     if card.suit == 'heart' or card.suit == 'diamond' then
         love.graphics.setColor(0.89, 0.06, 0.39)
     else
         love.graphics.setColor(0.2, 0.2, 0.2)
     end
+
 
     drawCorner(images[card.rank], numberOffsetX, numberOffsetY)
     drawCorner(suitImage, suitOffsetX, suitOffsetY)
