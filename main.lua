@@ -72,13 +72,27 @@ function love.draw()
         table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
     end
     table.insert(output, getTotal(dealerHand))
+
+    if roundOver then
+        table.insert(output, '')
+
+        if getTotal(playerHand) > getTotal(dealerHand) then
+            table.insert(output, 'Player wins')
+        elseif getTotal(dealerHand) > getTotal(playerHand) then
+            table.insert(output, 'Dealer wins')
+        else
+            table.insert(output, 'Draw')
+        end
+    end
     
     love.graphics.print(table.concat(output, '\n'), 15, 15)
 end
 
 function love.keypressed(key)
-    if key == 'h' then
+    if key == 'h' and not roundOver then
         takeCard(playerHand)
+    elseif key == 's' then
+        roundOver = true
     end
     
     if key == 'escape' then
