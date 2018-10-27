@@ -193,13 +193,44 @@ function love.draw()
     -- end
     
     -- love.graphics.print(table.concat(output, '\n'), 15, 15)
+    love.graphics.setBackgroundColor(1, 1, 1)
+    love.graphics.setColor(1, 1, 1)
+    local cardSpacing, marginX = 60, 10
+    for cardIndex, card in ipairs(dealerHand) do
+        local dealerMarginY = 30
+        if not roundOver and cardIndex == 1 then
+            love.graphics.draw(images.card_face_down, marginX, dealerMarginY)
+        else
+            drawCard(card, ((cardIndex - 1) * cardSpacing) + marginX, 30)
+        end
+    end
 
     for cardIndex, card in ipairs(playerHand) do
-        drawCard(card, (cardIndex - 1) * 60, 0)
+        drawCard(card, ((cardIndex - 1) * cardSpacing) + marginX, 140)
     end
-    
-    for cardIndex, card in ipairs(dealerHand) do
-        drawCard(card, (cardIndex - 1) * 60, 80)
+
+    love.graphics.setColor(0, 0, 0)
+
+    if roundOver then
+        love.graphics.print('Total: '.. getTotal(dealerHand), marginX, 10)
+    else
+        love.graphics.print('Total: ?', marginX, 10)
+    end
+
+    love.graphics.print('Total: '.. getTotal(playerHand), marginX, 120)
+
+    if roundOver then
+        local function drawWinner(message)
+            love.graphics.print(message, marginX, 268)
+        end
+
+        if hasHandWon(playerHand, dealerHand) then
+            drawWinner('Player wins')
+        elseif hasHandWon(dealerHand, playerHand) then
+            drawWinner('Dealer wins')
+        else
+            drawWinner('Draw')
+        end
     end
 end
 
