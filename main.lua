@@ -140,22 +140,6 @@ function love.load()
 
     buttonPlayAgainX = 10
     buttonPlayAgainWidth = 113
-
-    deck = {}
-    for suitIndex, suit in ipairs({ 'club', 'diamond', 'heart', 'spade' }) do
-        for rank = 1, 13 do
-            print('suit: '..suit..', rank: '..rank)
-            table.insert(deck, { suit = suit, rank = rank })
-        end
-    end
-
-    playerHand = {}
-    takeCard(playerHand)
-    takeCard(playerHand)
-    
-    dealerHand = {}
-    takeCard(dealerHand)
-    takeCard(dealerHand)
     
     images = {}
     for nameIndex, name in ipairs({
@@ -167,6 +151,27 @@ function love.load()
     }) do
         images[name] = love.graphics.newImage('images/'..name..'.png')
     end
+
+    function reset()
+        deck = {}
+        for suitIndex, suit in ipairs({'heart', 'spade', 'club', 'diamond'}) do
+            for rank = 1, 13 do
+                table.insert(deck, {suit = suit, rank = rank})
+            end
+        end
+        
+        playerHand = {}
+        takeCard(playerHand)
+        takeCard(playerHand)
+
+        dealerHand = {}
+        takeCard(dealerHand)
+        takeCard(dealerHand)
+
+        roundOver = false
+    end
+
+    reset()
 end
 
 function love.update(dt)
