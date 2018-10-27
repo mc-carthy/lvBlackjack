@@ -120,9 +120,27 @@ function drawCard(card, x, y)
     end
 end
 
+function isMouseInButton(buttonX, buttonWidth)
+    return love.mouse.getX() >= buttonX and 
+        love.mouse.getX() < buttonX + buttonWidth and 
+        love.mouse.getY() >= buttonY and 
+        love.mouse.getY() < buttonY + buttonHeight
+end
 
 function love.load()
     roundOver = false
+    buttonY = 230
+    buttonHeight = 25
+
+    buttonHitX = 10
+    buttonHitWidth = 53
+
+    buttonStandX = 70
+    buttonStandWidth = 53
+
+    buttonPlayAgainX = 10
+    buttonPlayAgainWidth = 113
+
     deck = {}
     for suitIndex, suit in ipairs({ 'club', 'diamond', 'heart', 'spade' }) do
         for rank = 1, 13 do
@@ -156,43 +174,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    -- local output = {}
-    
-    -- table.insert(output, 'Player hand:')
-    -- for cardIndex, card in ipairs(playerHand) do
-    --     table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
-    -- end
-    -- table.insert(output, getTotal(playerHand))
-    
-    -- table.insert(output, '')
-    
-    -- table.insert(output, 'Dealer hand:')
-    -- for cardIndex, card in ipairs(dealerHand) do
-    --     if not roundOver and cardIndex == 1 then
-    --         table.insert(output, '(Card hidden)')
-    --     else
-    --         table.insert(output, 'suit: '.. card.suit ..', rank: '.. card.rank)
-    --     end
-    -- end
-    -- if roundOver then
-    --     table.insert(output, getTotal(dealerHand))
-    -- else
-    --     table.insert(output, '?')
-    -- end
-
-    -- if roundOver then
-    --     table.insert(output, '')
-
-    --     if hasHandWon(playerHand, dealerHand) then
-    --         table.insert(output, 'Player wins')
-    --     elseif hasHandWon(dealerHand, playerHand) then
-    --         table.insert(output, 'Dealer wins')
-    --     else
-    --         table.insert(output, 'Draw')
-    --     end
-    -- end
-    
-    -- love.graphics.print(table.concat(output, '\n'), 15, 15)
     love.graphics.setBackgroundColor(1, 1, 1)
     love.graphics.setColor(1, 1, 1)
     local cardSpacing, marginX = 60, 10
@@ -232,28 +213,51 @@ function love.draw()
             drawWinner('Draw')
         end
     end
+
+    local function drawButton(text, buttonX, buttonWidth, textOffsetX)
+        if isMouseInButton(buttonX, buttonWidth) then
+            love.graphics.setColor(1, 0.8, 0.3)
+        else
+            love.graphics.setColor(1, 0.5, 0.2)
+        end
+        love.graphics.rectangle('fill', buttonX, buttonY, buttonWidth, 25)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.print(text, buttonX + textOffsetX, buttonY + 6)
+    end
+
+    if roundOver then
+        drawButton('Play again', buttonPlayAgainX, buttonPlayAgainWidth, 24)
+    else
+        drawButton('Hit!', buttonHitX, buttonHitWidth, 16)
+        drawButton('Stand', buttonStandX, buttonStandWidth, 8)
+    end
 end
 
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
-    if not roundOver then
-        if key == 'h' and not roundOver then
-            takeCard(playerHand)
-            if getTotal(playerHand) >= 21 then
+end
+
+function love.mousereleased()
+    function love.mousereleased()
+        if not roundOver then
+            if isMouseInButton(buttonHitX, buttonHitWidth) then
+                takeCard(playerHand)
+                if getTotal(playerHand) > 21 then
+                    roundOver = true
+                end
+            elseif isMouseInButton(buttonStandX, buttonStandWidth) then
                 roundOver = true
             end
-        elseif key == 's' then
-            roundOver = true
-        end
-
-        if roundOver then
-            while getTotal(dealerHand) < 17 do
-                takeCard(dealerHand)
+    
+            if roundOver then
+                while getTotal(dealerHand) < 17 do
+                    takeCard(dealerHand)
+                end
             end
+        elseif isMouseInButton(buttonPlayAgainX, buttonPlayAgainWidth) then
+            love.load()
         end
-    else
-        love.load()
     end
 end
